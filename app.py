@@ -3,7 +3,7 @@ from rag import ask_rag
 
 
 st.set_page_config(
-    page_title="Microsoft 365 RAG Assistant",
+    page_title="Microsoft 365 Assistant",
     page_icon="🤖",
     layout="wide"
 )
@@ -25,12 +25,10 @@ if "show_debug" not in st.session_state:
 # -----------------------------
 
 with st.sidebar:
-    st.title("🤖 Microsoft 365 RAG")
+    st.title("🤖 AI support assistant built with:")
 
     st.markdown(
         """
-        AI support assistant built with:
-
         - Azure OpenAI
         - Azure AI Search
         - Hybrid retrieval
