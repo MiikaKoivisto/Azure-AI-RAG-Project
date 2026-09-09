@@ -1,7 +1,8 @@
 import os
+import streamlit as st
 
 from dotenv import load_dotenv
-from azure.identity import DefaultAzureCredential
+from azure.core.credentials import AzureKeyCredential
 from azure.search.documents import SearchClient
 from azure.search.documents.models import VectorizedQuery
 
@@ -9,10 +10,33 @@ from azure_client import create_embedding
 
 load_dotenv()
 
-search_endpoint = os.getenv("AZURE_SEARCH_ENDPOINT")
-index_name = os.getenv("AZURE_SEARCH_INDEX")
 
-credential = DefaultAzureCredential()
+def get_setting(name):
+    try:
+        if name in st.secrets:
+            return st.secrets[name]
+    except Exception:
+        pass
+
+    return os.getenv(name)
+
+
+search_endpoint = get_setting("AZURE_SEARCH_ENDPOINT")
+index_name = get_setting("AZURE_SEARCH_INDEX")
+search_api_key = get_setting("AZURE_SEARCH_API_KEY")
+
+
+if not search_endpoint:
+    raise ValueError("AZURE_SEARCH_ENDPOINT is missing.")
+
+if not index_name:
+    raise ValueError("AZURE_SEARCH_INDEX is missing.")
+
+if not search_api_key:
+    raise ValueError("AZURE_SEARCH_API_KEY is missing.")
+
+
+credential = AzureKeyCredential(search_api_key)
 
 search_client = SearchClient(
     endpoint=search_endpoint,
